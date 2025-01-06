@@ -1,0 +1,18 @@
+.mvn/
+.gradle/
+.settings/
+target/
+build/
+.openapi-generator/
+generated/
+.vscode/
+.classpath
+.project
+.DS_Store
+src/main/resources/application-local.yml
+.factorypath
+bin
+src/main/resources/logback-spring.xml
+# Intellij
+.idea/
+*.iml
