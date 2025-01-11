@@ -21,9 +21,6 @@ jobs:
 
       - uses: actions/checkout@v4
 
-      - name: Verify settings.xml (before)
-        run: cat $GITHUB_WORKSPACE/settings.xml
-
       - name: Create maven settings.xml
         run: echo "${{ secrets.MAVEN_SETTINGS_XML }}" > $GITHUB_WORKSPACE/settings.xml
 
