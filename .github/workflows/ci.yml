@@ -17,6 +17,11 @@ jobs:
       packages: write
 
     steps:
+      - run: echo "Workspace is ${{ $GITHUB_WORKSPACE }}"
+
+      - name: Create maven settings.xml
+        run: echo "${{ secrets.MAVEN_SETTINGS_XML }}" > $GITHUB_WORKSPACE/settings.xml
+
       - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v4
