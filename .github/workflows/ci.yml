@@ -23,7 +23,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
     
       - name: Check runner
         run: echo "The runner OS is ${{ runner.os }}"
