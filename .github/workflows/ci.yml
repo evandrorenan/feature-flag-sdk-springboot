@@ -22,7 +22,7 @@ jobs:
           java-version: '17'
           distribution: 'adoptopenjdk'
     
-      - name: 3-7 - Check runner.os
+      - name: 3-7 - Check runner
         run: echo "The runner OS is: ${{ runner.os }}"
     
       - name: 4-7 - Cache Maven dependencies
