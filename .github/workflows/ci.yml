@@ -12,35 +12,35 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-  steps:
-  - name: [1/7] Checkout code
-    uses: actions/checkout@v2
-
-  - name: [2/7] Set up Java 17
-    uses: actions/setup-java@v2
-    with:
-      java-version: '17'
-      distribution: 'adoptopenjdk'
-
-  - name: [3/7] Check runner.os
-    run: echo "The runner OS is: ${{ runner.os }}"
-
-  - name: [4/7] Cache Maven dependencies
-    uses: actions/cache@v2
-    with:
-      path: ~/.m2/repository
-      key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-      restore-keys: |
-        ${{ runner.os }}-maven-
-
-  - name: [5/7] Build and compile with Maven
-    run: mvn clean install -DskipTests=false
-
-  - name: [6/7] Check Maven Username
-    run: echo "MAVEN_USERNAME is: ${{ secrets.MAVEN_USERNAME }}"
-
-  - name: [7/7] Push JAR to Maven Central
-    run: mvn deploy -DskipTests=true
-    env:
-      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-      MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+    steps:
+      - name: [1/7] Checkout code
+        uses: actions/checkout@v2
+    
+      - name: [2/7] Set up Java 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adoptopenjdk'
+    
+      - name: [3/7] Check runner.os
+        run: echo "The runner OS is: ${{ runner.os }}"
+    
+      - name: [4/7] Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+    
+      - name: [5/7] Build and compile with Maven
+        run: mvn clean install -DskipTests=false
+    
+      - name: [6/7] Check Maven Username
+        run: echo "MAVEN_USERNAME is: ${{ secrets.MAVEN_USERNAME }}"
+    
+      - name: [7/7] Push JAR to Maven Central
+        run: mvn deploy -DskipTests=true
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
