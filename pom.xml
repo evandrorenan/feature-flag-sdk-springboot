@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>br.com.evandrorenan</groupId>
     <artifactId>feature-flag-sdk-springboot</artifactId>
-    <version>2.0.15</version>
+    <version>2.0.16</version>
     <name>feature-flag-sdk-springboot</name>
     <properties>
         <spring.version>3.4.1</spring.version>
