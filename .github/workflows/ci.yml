@@ -17,7 +17,7 @@ jobs:
       packages: write
 
     steps:
-      - run: echo "Workspace is ${{ $GITHUB_WORKSPACE }}"
+      - run: echo "Workspace is ${{ github.workspace }}"
 
       - name: Create maven settings.xml
         run: echo "${{ secrets.MAVEN_SETTINGS_XML }}" > $GITHUB_WORKSPACE/settings.xml
