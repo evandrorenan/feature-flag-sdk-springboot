@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Service("rest")
+@Service("restFeatureFlagQuery")
 public class RestFeatureFlagQueryAdapter implements FeatureFlagQueryPort {
 
     private final FeatureFlagServiceClient serviceClient;
