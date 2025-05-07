@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -72,6 +70,7 @@ public class OpenFeatureCustomProvider implements FeatureProvider {
 
     private <T> ProviderEvaluation<T> evaluateFlag(String flagName, T defaultValue, EvaluationContext evaluationContext, ValueConverter<T> converter) {
         Optional<Flag> flag = findValidFlag(flagName);
+
         if (flag.isEmpty()) return buildErrorEvaluation(defaultValue);
         return processFlag(flag.get(), defaultValue, evaluationContext, converter);
     }
@@ -110,45 +109,25 @@ public class OpenFeatureCustomProvider implements FeatureProvider {
         if (isStaticEvaluation(flag, evaluationContext)) {
             return staticEvaluation(flag, defaultValue, converter);
         }
-        Map<String, String> context = extractContext(evaluationContext);
-        return evaluateTargeting(flag, defaultValue, converter, context);
+        return dynamicEvaluation(flag, defaultValue, evaluationContext, converter);
     }
 
-    private boolean isStaticEvaluation(Flag flag, EvaluationContext context) {
-        return flag.getTargeting() == null || flag.getTargeting().isEmpty() || context == null;
-    }
-
-    private Map<String, String> extractContext(EvaluationContext evaluationContext) {
-        Map<String, String> context = new LinkedHashMap<>();
-        evaluationContext.asMap().forEach((key, value) -> context.put(key, value.asString()));
-        return context;
-    }
-
-    private <T> ProviderEvaluation<T> evaluateTargeting(Flag flag, T defaultValue, ValueConverter<T> converter, Map<String, String> context) {
+    private <T> ProviderEvaluation<T> dynamicEvaluation(Flag flag, T defaultValue, EvaluationContext evaluationContext, ValueConverter<T> converter) {
         try {
-            String variant = findMatchingVariant(flag, context);
-            if (variant == null || !flag.getVariants().containsKey(variant)) {
-                log.error("Variant not found or null: {}", variant);
-                return buildErrorEvaluation(defaultValue);
-            }
-            return convertVariant(flag.getVariants().get(variant), converter)
-                    .map(value -> buildTargetingEvaluation(value, variant))
+            Object result = jsonLogic.apply(flag.getTargeting(), evaluationContext.asObjectMap());
+            if (result == null) return staticEvaluation(flag, defaultValue, converter);
+
+            return convertVariant(flag.getVariants().get(result), converter)
+                    .map(value -> buildTargetingEvaluation(value, String.valueOf(result)))
                     .orElse(buildErrorEvaluation(defaultValue));
-        } catch (Exception e) {
-            log.error("Error evaluating targeting for flag {}", flag.getFlagName(), e);
+        } catch (JsonLogicException e) {
+            log.error("Error processing dynamic evaluation of flag: {}, {}", flag.getFlagName(), e);
             return buildErrorEvaluation(defaultValue);
         }
     }
 
-    private String findMatchingVariant(Flag flag, Map<String, String> context) throws JsonLogicException, JsonProcessingException {
-        Object result = jsonLogic.apply(flag.getTargeting(), context);
-        if (result != null) return result.toString();
-        for (String value : context.values()) {
-            result = jsonLogic.apply(flag.getTargeting(), mapper.readValue(value, Map.class));
-            if (result != null) return result.toString();
-        }
-        log.warn("Targeting evaluated to null for flag: {}", flag.getFlagName());
-        return flag.getDefaultVariant();
+    private boolean isStaticEvaluation(Flag flag, EvaluationContext context) {
+        return flag.getTargeting() == null || flag.getTargeting().isEmpty() || context == null;
     }
 
     private <T> ProviderEvaluation<T> staticEvaluation(Flag flag, T defaultValue, ValueConverter<T> converter) {
