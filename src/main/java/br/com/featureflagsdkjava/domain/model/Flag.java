@@ -2,10 +2,7 @@ package br.com.featureflagsdkjava.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Map;
 
@@ -20,17 +17,17 @@ import java.util.Map;
 @NoArgsConstructor
 public class Flag {
    private Long id;
-   private String flagName;
+   private String name;
    private State state;
-   private FlagType flagType;
+   private Type type;
    private String defaultVariant;
-   private Map<String, String> variants;
+   private Map<String, Object> variants;
    private String targeting;
 
    /**
     * Enum representing the types of feature flags.
     */
-   public enum FlagType {
+   public enum Type {
       BOOLEAN, STRING, NUMBER, OBJECT
    }
 

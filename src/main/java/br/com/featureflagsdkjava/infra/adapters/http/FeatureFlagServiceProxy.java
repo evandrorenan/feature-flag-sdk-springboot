@@ -6,12 +6,12 @@ import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 
-public interface FeatureFlagServiceClient {
+public interface FeatureFlagServiceProxy {
     @GetExchange("/flags")
     List<Flag> findAll();
 
     @GetExchange("/flags/byType")
-    List<Flag> findFlagsByType(Flag.FlagType flagType);
+    List<Flag> findFlagsByType(Flag.Type flagType);
 
     @GetExchange("/flags/{flagName}")
     Flag findByFlagName(@PathVariable("flagName") String flagName);

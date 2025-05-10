@@ -14,7 +14,7 @@ public class HttpInterfaceConfig {
     private String featureFlagServiceUrl;
 
     @Bean
-    public FeatureFlagServiceClient featureFlagClient() {
+    public FeatureFlagServiceProxy featureFlagClient() {
         WebClient webClient = WebClient.builder()
                                        .baseUrl(featureFlagServiceUrl)
                                        .build();
@@ -22,6 +22,6 @@ public class HttpInterfaceConfig {
         return HttpServiceProxyFactory
                 .builderFor(WebClientAdapter.create(webClient))
                 .build()
-                .createClient(FeatureFlagServiceClient.class);
+                .createClient(FeatureFlagServiceProxy.class);
     }
 }

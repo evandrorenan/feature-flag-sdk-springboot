@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface FeatureFlagQueryPort {
     List<Flag> findAll();
 
-    List<Flag> findFlagsByType(Flag.FlagType flagType);
+    List<Flag> findFlagsByType(Flag.Type flagType);
 
     Optional<Flag> findByFlagName(String flagName);
 }

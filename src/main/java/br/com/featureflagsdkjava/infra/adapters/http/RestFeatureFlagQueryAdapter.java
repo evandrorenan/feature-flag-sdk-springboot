@@ -4,7 +4,6 @@ import br.com.featureflagsdkjava.domain.model.Flag;
 import br.com.featureflagsdkjava.domain.ports.FeatureFlagQueryPort;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,9 +14,9 @@ import java.util.Optional;
 @Service("restFeatureFlagQuery")
 public class RestFeatureFlagQueryAdapter implements FeatureFlagQueryPort {
 
-    private final FeatureFlagServiceClient serviceClient;
+    private final FeatureFlagServiceProxy serviceClient;
 
-    public RestFeatureFlagQueryAdapter(FeatureFlagServiceClient serviceClient) {
+    public RestFeatureFlagQueryAdapter(FeatureFlagServiceProxy serviceClient) {
         this.serviceClient = serviceClient;
     }
 
@@ -31,7 +30,7 @@ public class RestFeatureFlagQueryAdapter implements FeatureFlagQueryPort {
     }
 
     @Override
-    public List<Flag> findFlagsByType(Flag.FlagType flagType) {
+    public List<Flag> findFlagsByType(Flag.Type flagType) {
         return serviceClient.findFlagsByType(flagType);
     }
 
